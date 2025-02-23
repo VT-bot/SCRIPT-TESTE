@@ -4,91 +4,73 @@
 local SonicMenu = Instance.new("ScreenGui")
 local MainFrame = Instance.new("Frame")
 local MinimizeButton = Instance.new("TextButton")
-local RestoreButton = Instance.new("TextButton")  -- Novo botão para restaurar o menu
-local ButtonsFrame = Instance.new("ScrollingFrame")  -- Alterei ButtonsFrame para ScrollingFrame
-local FunctionsFrame = Instance.new("ScrollingFrame")  -- Alterado para ScrollingFrame
+local RestoreButton = Instance.new("TextButton")
+local ButtonsFrame = Instance.new("ScrollingFrame")
+local FunctionsFrame = Instance.new("ScrollingFrame")
 local FunctionsTitle = Instance.new("TextLabel")
 
--- Configuração do painel quadrado
+-- Configuração do painel principal
 SonicMenu.Parent = game.CoreGui
 MainFrame.Parent = SonicMenu
-MainFrame.Size = UDim2.new(0, 400, 0, 400)  -- Tamanho quadrado
-MainFrame.Position = UDim2.new(0.5, -200, 0.5, -200)  -- Ajustei a posição para centralizar
-MainFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+MainFrame.Size = UDim2.new(0, 450, 0, 500)
+MainFrame.Position = UDim2.new(0.5, -225, 0.5, -250)
+MainFrame.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+MainFrame.BorderSizePixel = 2
 MainFrame.Draggable = true
 MainFrame.Active = true
 MainFrame.Selectable = true
+MainFrame.BackgroundTransparency = 0.2
 
+-- Botão Minimizar
 MinimizeButton.Parent = MainFrame
 MinimizeButton.Size = UDim2.new(0, 50, 0, 25)
 MinimizeButton.Position = UDim2.new(1, -55, 0, 5)
 MinimizeButton.Text = "-"
+MinimizeButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
 MinimizeButton.MouseButton1Click:Connect(function()
-    MainFrame.Size = UDim2.new(0, 50, 0, 50)  -- Reduz o tamanho do painel a uma linha fina
-    ButtonsFrame.Visible = false  -- Esconde os botões de teleporte
-    FunctionsFrame.Visible = false  -- Esconde os botões de funções
-    RestoreButton.Visible = true  -- Mostra o botão de restaurar
+    MainFrame.Size = UDim2.new(0, 50, 0, 50)
+    ButtonsFrame.Visible = false
+    FunctionsFrame.Visible = false
+    RestoreButton.Visible = true
 end)
 
+-- Botão Restaurar
 RestoreButton.Parent = MainFrame
 RestoreButton.Size = UDim2.new(0, 50, 0, 25)
 RestoreButton.Position = UDim2.new(1, -55, 0, 5)
-RestoreButton.Text = "⤴"  -- Ícone de seta para restaurar
-RestoreButton.Visible = false  -- Fica invisível inicialmente
+RestoreButton.Text = "⤴"
+RestoreButton.Visible = false
+RestoreButton.BackgroundColor3 = Color3.fromRGB(0, 200, 0)
 RestoreButton.MouseButton1Click:Connect(function()
-    MainFrame.Size = UDim2.new(0, 400, 0, 400)  -- Restaura o tamanho normal do painel
-    ButtonsFrame.Visible = true  -- Mostra os botões de teleporte
-    FunctionsFrame.Visible = true  -- Mostra os botões de funções
-    RestoreButton.Visible = false  -- Esconde o botão de restaurar
+    MainFrame.Size = UDim2.new(0, 450, 0, 500)
+    ButtonsFrame.Visible = true
+    FunctionsFrame.Visible = true
+    RestoreButton.Visible = false
 end)
 
--- Criando o ButtonsFrame com rolagem
+-- Configuração do painel de botões
 ButtonsFrame.Parent = MainFrame
-ButtonsFrame.Size = UDim2.new(1, 0, 0.5, 0)  -- Ajustei o tamanho para ocupar metade do painel
-ButtonsFrame.Position = UDim2.new(0, 0, 0, 30)
+ButtonsFrame.Size = UDim2.new(1, 0, 0.5, -10)
+ButtonsFrame.Position = UDim2.new(0, 0, 0, 40)
 ButtonsFrame.BackgroundTransparency = 1
 ButtonsFrame.ScrollBarThickness = 5
-ButtonsFrame.Visible = true  -- Garante que os botões de teleporte sejam visíveis por padrão
 
+-- Layout dos botões
 local uiListTeleport = Instance.new("UIListLayout", ButtonsFrame)
 uiListTeleport.SortOrder = Enum.SortOrder.LayoutOrder
 uiListTeleport.Padding = UDim.new(0, 5)
 
--- Criando o FunctionsFrame com rolagem
+-- Configuração do painel de funções
 FunctionsFrame.Parent = MainFrame
-FunctionsFrame.Size = UDim2.new(1, 0, 0.5, 0)  -- Ajustei o tamanho para ocupar metade do painel
+FunctionsFrame.Size = UDim2.new(1, 0, 0.5, -10)
 FunctionsFrame.Position = UDim2.new(0, 0, 0.5, 0)
 FunctionsFrame.BackgroundTransparency = 1
 FunctionsFrame.ScrollBarThickness = 5
-FunctionsFrame.Visible = true  -- Garante que as funções sejam visíveis por padrão
 
+-- Layout das funções
 local uiListFunctions = Instance.new("UIListLayout", FunctionsFrame)
 uiListFunctions.SortOrder = Enum.SortOrder.LayoutOrder
 uiListFunctions.Padding = UDim.new(0, 5)
-
-FunctionsTitle.Parent = FunctionsFrame
-FunctionsTitle.Size = UDim2.new(1, 0, 0, 30)
-FunctionsTitle.Position = UDim2.new(0, 0, 0, 0)
-FunctionsTitle.Text = "Funções"
-FunctionsTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-FunctionsTitle.BackgroundTransparency = 1
-
--- Função para teleporte
-local function teleport(x, y, z)
-    local player = game.Players.LocalPlayer
-    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-        local hrp = player.Character.HumanoidRootPart
-        local targetPos = CFrame.new(x, y, z)
-        hrp.CFrame = targetPos
-
-        -- Verificando se o teleporte foi bem-sucedido
-        if hrp.Position == targetPos.Position then
-            print("Teleporte realizado com sucesso!")
-        else
-            warn("Falha no teleporte!")
-        end
-    end
-end
 
 -- Criando botões para teleportes
 local locations = {
@@ -105,105 +87,41 @@ local locations = {
 for _, loc in pairs(locations) do
     local button = Instance.new("TextButton")
     button.Text = loc[1]
-    button.Size = UDim2.new(1, 0, 0, 30)
+    button.Size = UDim2.new(1, 0, 0, 40)
     button.Parent = ButtonsFrame
+    button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.MouseButton1Click:Connect(function()
-        teleport(loc[2], loc[3], loc[4])
+        local player = game.Players.LocalPlayer
+        if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+            player.Character.HumanoidRootPart.CFrame = CFrame.new(loc[2], loc[3], loc[4])
+        end
     end)
 end
 
 -- Criando botões para funções
 local functions = {
-    {"Velocidade", function() 
-        print("Função Velocidade ativada!")
-    end},
-    {"ESP Nome", function() 
-        print("Função ESP Nome ativada!")
-    end},
-    {"ESP Pessoas", function() 
-        print("Função ESP Pessoas ativada!")
-    end},
-    {"No Clip", function() 
-        print("Função No Clip ativada!")
-    end},
-    {"Hit Box", function() 
-        print("Função Hit Box ativada!")
-    end},
-    {"CL", function() 
-        print("Função CL ativada!")
-    end},
-    {"Teleporte Player", function() 
-        print("Função Teleporte Player ativada!")
-    end}
+    {"Velocidade", function() print("Velocidade ativada!") end},
+    {"ESP Nome", function() print("ESP Nome ativada!") end},
+    {"ESP Pessoas", function() print("ESP Pessoas ativada!") end},
+    {"No Clip", function() print("No Clip ativado!") end},
+    {"Hit Box", function() print("Hit Box ativado!") end},
+    {"CL", function() print("CL ativado!") end},
+    {"Teleporte Player", function() print("Teleporte Player ativado!") end}
 }
 
 for _, func in pairs(functions) do
     local button = Instance.new("TextButton")
     button.Text = func[1]
-    button.Size = UDim2.new(1, 0, 0, 30)
+    button.Size = UDim2.new(1, 0, 0, 40)
     button.Parent = FunctionsFrame
+    button.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+    button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.MouseButton1Click:Connect(func[2])
 end
 
--- Ajustando o CanvasSize para que todos os botões de função fiquem visíveis
-local totalButtonsTeleport = #locations
-ButtonsFrame.CanvasSize = UDim2.new(0, 0, 0, totalButtonsTeleport * 35)
+-- Ajustando a rolagem
+ButtonsFrame.CanvasSize = UDim2.new(0, 0, 0, #locations * 45)
+FunctionsFrame.CanvasSize = UDim2.new(0, 0, 0, #functions * 45)
 
-local totalButtonsFunctions = #functions
-FunctionsFrame.CanvasSize = UDim2.new(0, 0, 0, totalButtonsFunctions * 35)
-
--- Funções adicionais
-loadstring(game:HttpGet("https://raw.githubusercontent.com/XNEOFF/FlyGuiV3/main/FlyGuiV3.txt"))()
-
--- ANTI BAN E ANTI EXPLOIT
-local mt = getrawmetatable(game)
-setreadonly(mt, false)
-local old = mt.__namecall
-
-mt.__namecall = newcclosure(function(self, ...)
-    local method = getnamecallmethod()
-    local args = {...}
-    
-    -- Bloquear tentativas de kick e ban
-    if method == "Kick" or method == "Ban" then
-        warn("Tentativa de kick bloqueada!")
-        return nil
-    end
-
-    return old(self, ...)
-end)
-
--- Proteção contra modificações forçadas no player
-local function protectPlayer()
-    local player = game.Players.LocalPlayer
-    player.CharacterAdded:Connect(function(char)
-        local hrp = char:FindFirstChild("HumanoidRootPart")
-        if hrp then
-            hrp:GetPropertyChangedSignal("CFrame"):Connect(function()
-                if not hrp.Parent then return end
-                hrp.CFrame = hrp.CFrame -- Restaura a posição se for modificada
-            end)
-        end
-    end)
-end
-
-protectPlayer()
-
--- Proteção contra exploits no ambiente de execução
-local function isExploitDetected()
-    -- Verificação simples para verificar se há sinais típicos de exploit (ex: funções do "getfenv" ou outros sinais)
-    local success, err = pcall(function()
-        return game:GetService("HttpService"):GetAsync("https://www.google.com")
-    end)
-    if not success then
-        return true
-    end
-    return false
-end
-
-if isExploitDetected() then
-    warn("Exploit detectado, script não será executado!")
-    return
-end
-
-print("Anti-Ban e Anti-Exploit ativados!")
+print("Menu organizado e estilizado com sucesso!")
